@@ -1,44 +1,128 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title></title>
     <link href="../css/bootstrap.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 160px;
+            position: fixed;
+            z-index: 1;
+            /*top: 10px;*/
+            left: 0;
+            background-color: #ffffff;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #0099cc;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #ffffff;
+            background-color: #0099cc;
+        }
+
+        .main {
+            margin-left: 160px; /* Same as the width of the sidenav */
+            font-size: 15px; /* Increased text to enable scrolling */
+            padding: 10px 10px;
+        }
+
+        .main1 {
+            font-size: 20px;
+            color: #ffffff;
+            background-color: #000000;
+        }
+
+        .main1 a {
+            font-size: 20px;
+            color: #ffffff;
+            background-color: #000000;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 20px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div>
-    <input type=button onClick="parent.location='user/add'"
-           value='Add new user'>
-    <input type=button onClick="parent.location='logout'"
-           value='Logout'>
+<div class="main1">
+
+    <p style="text-align:right;">
+        <a href="/logout"> Logout</a>
+    </p>
+    <a sec:authorize="isAuthenticated()">
+        <span style="font-weight: bold;" sec:authentication="name"></span> with roles: </a>
+    <p style="display:inline" th:each="authority : ${#authentication.getAuthorities()}"
+       th:text="${authority.getAuthority().toString()}">
+    </p>
+
 </div>
-<div>
-    <h2>Users list</h2>
-    <table id="example" class="table table-bordered" style="width: 75%">
+<div class="sidenav">
+    <a href="/admin">Admin</a>
+    <a href="/user">User</a>
+</div>
+<div class="main">
+    <h2>Admin panel</h2>
+    <table id="example" class="table table-striped">
         <thead>
         <tr>
-            <th> Id</th>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/admin">User tables</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">New user</a>
+                </li>
+            </ul>
+        </tr>
+
+        <tr class="thead-light"><b>All users</b></tr>
+        <tr>
+            <th> ID</th>
             <th> First Name</th>
             <th> Last name</th>
+            <th> Age</th>
             <th> Email</th>
-            <th> Login</th>
-            <th> Roles</th>
+            <th> Role</th>
+            <th> Edit</th>
+            <th> Delete</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:if="${users.empty}">
-            <td colspan="2"> No users available</td>
-        </tr>
         <tr th:each="user : ${users}">
             <td><span th:text="${user.getId()}"> Id </span></td>
             <td><span th:text="${user.getFirstName()}">First Name </span></td>
             <td><span th:text="${user.getLastName()}"> Last Name </span></td>
-            <td><span th:text="${user.getEmail()}"> Email </span></td>
-            <td><span th:text="${user.getUsername()}"> Login </span></td>
+            <td><span th:text="${user.getAge()}"> Age </span></td>
+            <td><span th:text="${user.getUserName()}"> Email </span></td>
             <td><span th:text="${user.getRoles()}"> Roles </span></td>
-            <td><a th:href="@{user/update/{id}(id=${user.id})}">Edit</a></td>
-            <td><a th:href="@{user/remove/{id}(id=${user.id})}">Remove</a></td>
+            <td><a th:href="@{user/update/{id}(id=${user.id})}">
+                <button class="btn btn-info">Edit</button>
+            </a></td>
+            <td><a th:href="@{user/remove/{id}(id=${user.id})}">
+                <button class="btn btn-danger">Delete</button>
+            </a></td>
         </tr>
         </tbody>
     </table>
