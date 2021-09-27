@@ -27,11 +27,6 @@ public class UserController {
         this.roleService = roleService;
     }
 
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login";
-    }
-
     @GetMapping("/index")
     public String indexPage() {
         return "index";
