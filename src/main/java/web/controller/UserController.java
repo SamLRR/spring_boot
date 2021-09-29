@@ -51,7 +51,7 @@ public class UserController {
         return "addUser";
     }
 
-    @PostMapping("/user")
+    @PostMapping("/admin")
     public String addUser(@ModelAttribute("user") User user, ModelMap model, BindingResult bindingResult) {
 
         if(bindingResult.hasErrors()){
@@ -87,7 +87,7 @@ public class UserController {
     }
 
     @PostMapping("/user/update")
-    public String updateUser(@ModelAttribute("user") User user, Authentication authentication,
+    public String updateUser(@ModelAttribute("user") User user,
                              @RequestParam Map<String, String> form) {
         List<Role> roles = roleService.getAllRoles();
 
@@ -98,12 +98,7 @@ public class UserController {
         }
         userService.saveUser(user);
 
-        if (authentication.getAuthorities()
-                .stream().anyMatch(authority -> authority.getAuthority().equals("ADMIN"))) {
-
-            return "redirect:/admin";
-        }
-        return "redirect:/index";
+        return "redirect:/admin";
     }
 
     @GetMapping("/user/remove/{id}")

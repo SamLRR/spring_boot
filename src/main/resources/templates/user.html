@@ -1,42 +1,131 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add new user form</title>
+    <title></title>
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 160px;
+            position: fixed;
+            z-index: 1;
+            /*top: 10px;*/
+            left: 0;
+            background-color: #ffffff;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #0099cc;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #ffffff;
+            background-color: #0099cc;
+        }
+
+        .main {
+            margin-left: 160px; /* Same as the width of the sidenav */
+            font-size: 15px; /* Increased text to enable scrolling */
+            padding: 10px 10px;
+        }
+
+        .main1 {
+            height: 40px;
+            font-size: 25px;
+            color: #ffffff;
+            background-color: #000000;
+        }
+
+        .main1 a {
+            margin-left: 900px;
+            font-size: 15px;
+            color: #9d9d9d;
+            background-color: #000000;
+        }
+
+        .main1 p {
+            display: inline;
+            font-size: 20px;
+            color: #ffffff;
+            background-color: #000000;
+        }
+
+        .main2 {
+            margin-left: 400px; /* Same as the width of the sidenav */
+            margin-right: 400px; /* Same as the width of the sidenav */
+            font-size: 15px; /* Increased text to enable scrolling */
+            text-align: center;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 20px;
+            }
+        }
+
+        .form-control:valid {
+            background-color: #96d3ec !important;
+        }
+
+    </style>
 </head>
 <body>
-<h2> User page</h2>
-<div>
-    <input type=button onClick="parent.location='logout'"
-           value='Logout'>
+<div class="main1">
+
+    <p sec:authorize="isAuthenticated()">
+        <span style="font-weight: bold;" sec:authentication="name"></span> with roles: </p>
+    <p th:each="authority : ${#authentication.getAuthorities()}"
+       th:text="${authority.getAuthority().toString()}">
+    </p>
+    <a href="/logout">Logout</a>
 </div>
-
-<form th:method="POST" th:action="@{/user/update}" th:object="${user}">
-
-    <input type="hidden" th:field="*{id}">
-
-    <label for="name"> Enter name </label>
-    <input type="text" th:field="*{firstName}" id="name"/>
-    <br>
-
-    <label for="lastName"> Enter last name </label>
-    <input type="text" th:field="*{lastName}" id="lastName">
-    <br>
-
-    <label for="email"> Enter email </label>
-    <input type="text" th:field="*{userName}" id="email">
-    <br>
-
-    <label for="username"> Enter login </label>
-    <input type="text" th:field="*{userName}" id="username">
-    <br>
-    <input type="hidden" th:field="*{password}">
-    <input type="hidden" th:name="USER">
-
-    <input type="submit" value="Update">
-
-</form>
-
+<div class="sidenav">
+    <a sec:authorize="hasAuthority('ADMIN')"
+       href="/admin">Admin</a>
+    <a href="/user">User</a>
+</div>
+<div class="main">
+    <h2>user information-page</h2>
+    <table id="example" class="table table-striped">
+        <thead>
+        <tr class="thead-light"><b>About user</b></tr>
+        <tr>
+            <th> ID</th>
+            <th> First Name</th>
+            <th> Last name</th>
+            <th> Age</th>
+            <th> Email</th>
+            <th> Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><span th:text="${user.getId()}"> Id </span></td>
+            <td><span th:text="${user.getFirstName()}">First Name </span></td>
+            <td><span th:text="${user.getLastName()}"> Last Name </span></td>
+            <td><span th:text="${user.getAge()}"> Age </span></td>
+            <td><span th:text="${user.getUsername()}"> Email </span></td>
+            <td><span th:text="${user.getRoles()}"> Roles </span></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

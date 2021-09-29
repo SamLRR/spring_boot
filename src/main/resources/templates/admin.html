@@ -43,15 +43,31 @@
         }
 
         .main1 {
-            font-size: 20px;
+            height: 40px;
+            font-size: 25px;
             color: #ffffff;
             background-color: #000000;
         }
 
         .main1 a {
+            margin-left: 900px;
+            font-size: 15px;
+            color: #9d9d9d;
+            background-color: #000000;
+        }
+
+        .main1 p {
+            display: inline;
             font-size: 20px;
             color: #ffffff;
             background-color: #000000;
+        }
+
+        .main2 {
+            margin-left: 400px; /* Same as the width of the sidenav */
+            margin-right: 400px; /* Same as the width of the sidenav */
+            font-size: 15px; /* Increased text to enable scrolling */
+            text-align: center;
         }
 
         @media screen and (max-height: 450px) {
@@ -63,20 +79,22 @@
                 font-size: 20px;
             }
         }
+
+        .form-control:valid {
+            background-color: #96d3ec !important;
+        }
+
     </style>
 </head>
 <body>
 <div class="main1">
 
-    <p style="text-align:right;">
-        <a href="/logout"> Logout</a>
-    </p>
-    <a sec:authorize="isAuthenticated()">
-        <span style="font-weight: bold;" sec:authentication="name"></span> with roles: </a>
-    <p style="display:inline" th:each="authority : ${#authentication.getAuthorities()}"
+    <p sec:authorize="isAuthenticated()">
+        <span style="font-weight: bold;" sec:authentication="name"></span> with roles: </p>
+    <p th:each="authority : ${#authentication.getAuthorities()}"
        th:text="${authority.getAuthority().toString()}">
     </p>
-
+    <a href="/logout">Logout</a>
 </div>
 <div class="sidenav">
     <a href="/admin">Admin</a>
@@ -88,12 +106,8 @@
         <thead>
         <tr>
             <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/admin">User tables</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">New user</a>
-                </li>
+                <li class="active"><a data-toggle="tab" href="/admin">User table</a></li>
+                <li><a data-toggle="tab" href="/user/add">New user</a></li>
             </ul>
         </tr>
 
@@ -127,5 +141,10 @@
         </tbody>
     </table>
 </div>
+<!--<div class="tab-content">-->
+<!--    <div id="menu1" class="tab-pane fade show active">-->
+<!--        Описание товара...-->
+<!--    </div>-->
+<!--</div>-->
 </body>
 </html>

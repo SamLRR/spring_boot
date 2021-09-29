@@ -1,52 +1,157 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add new user form</title>
+    <title></title>
+    <link href="../css/bootstrap.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 160px;
+            position: fixed;
+            z-index: 1;
+            /*top: 10px;*/
+            left: 0;
+            background-color: #ffffff;
+            overflow-x: hidden;
+            padding-top: 20px;
+        }
+
+        .sidenav a {
+            padding: 6px 8px 6px 16px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #0099cc;
+            display: block;
+        }
+
+        .sidenav a:hover {
+            color: #ffffff;
+            background-color: #0099cc;
+        }
+
+        .main {
+            margin-left: 160px; /* Same as the width of the sidenav */
+            font-size: 15px; /* Increased text to enable scrolling */
+            padding: 10px 10px;
+        }
+
+        .main1 {
+            height: 40px;
+            font-size: 25px;
+            color: #ffffff;
+            background-color: #000000;
+        }
+
+        .main1 a {
+            margin-left: 900px;
+            font-size: 15px;
+            color: #9d9d9d;
+            background-color: #000000;
+        }
+
+        .main1 p {
+            display: inline;
+            font-size: 20px;
+            color: #ffffff;
+            background-color: #000000;
+        }
+
+        .main2 {
+            margin-left: 400px; /* Same as the width of the sidenav */
+            margin-right: 400px; /* Same as the width of the sidenav */
+            font-size: 15px; /* Increased text to enable scrolling */
+            text-align: center;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 20px;
+            }
+        }
+
+        .form-control:valid {
+            background-color: #96d3ec !important;
+        }
+
+    </style>
 </head>
 <body>
-<h2> Add user data</h2>
+<div class="main1">
 
+    <p sec:authorize="isAuthenticated()">
+        <span style="font-weight: bold;" sec:authentication="name"></span> with roles: </p>
+    <p th:each="authority : ${#authentication.getAuthorities()}"
+       th:text="${authority.getAuthority().toString()}">
+    </p>
+    <a href="/logout">Logout</a>
+</div>
+<div class="sidenav">
+    <a href="/admin">Admin</a>
+    <a href="/user">User</a>
+</div>
+<div class="main">
+    <h2>Admin panel</h2>
+    <table id="example" class="table table-striped">
+        <thead>
+        <tr>
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="/admin">User table</a></li>
+                <li><a data-toggle="tab" href="/user/add">New user</a></li>
+            </ul>
+        </tr>
 
-<form th:method="POST" th:action="@{/user}" th:object="${user}">
+        <tr class="thead-light"><b>Add new user</b></tr>
+        <div class="main2">
+            <form th:method="POST" th:action="@{/admin}" th:object="${user}">
 
-    <span th:text="${loginError}" style="color:red"></span>
-    <br>
+                <label for="name"> First name </label>
+                <input class="form-control" required type="text" style="background: #ffd970"
+                       th:field="*{firstName}" id="name"/>
 
-    <label for="name"> Enter name </label>
-    <input type="text" th:field="*{firstName}" id="name"/>
-    <br>
+                <label for="lastName"> Last name </label>
+                <input class="form-control" required type="text" style="background: #ffd970"
+                       th:field="*{lastName}" id="lastName">
 
-    <label for="lastName"> Enter last name </label>
-    <input type="text" th:field="*{lastName}" id="lastName">
-    <br>
+                <label for="age"> Age </label>
+                <input class="form-control" type="text" th:field="*{age}" id="age">
 
-    <label for="username"> Enter age </label>
-    <input type="text" th:field="*{age}" id="username">
-    <br>
+                <span th:text="${loginError}" style="color:red"></span>
+                <label for="email"> Email </label>
+                <input class="form-control" required type="text" style="background: #ffd970"
+                       th:field="*{userName}" id="email">
 
-    <label for="email"> Enter email </label>
-    <input type="text" th:field="*{userName}" id="email">
-    <br>
+                <label for="password"> Password </label>
+                <input class="form-control" type="password" th:field="*{password}" id="password">
 
-    <span th:text="${loginError}" style="color:red"></span>
-    <br>
+                <span th:text="${passwordError}" style="color:red"></span>
 
-    <label for="password"> Enter password </label>
-    <input type="password" th:field="*{password}" id="password">
-    <br>
+                <label for="passwordConfirm"> Confirm password </label>
+                <input class="form-control" type="password" th:field="*{passwordConfirm}" id="passwordConfirm">
 
-    <span th:text="${passwordError}" style="color:red"></span>
-    <br>
+                <label for="roles">Role:</label>
+                <select class="form-control" id="roles" name="roles" size="2" multiple>
+                    <option value="ADMIN">ADMIN</option>
+                    <option value="USER">USER</option>
+                </select> <br>
 
-    <label for="passwordConfirm"> Confirm password </label>
-    <input type="password" th:field="*{passwordConfirm}" id="passwordConfirm">
-    <br>
+                <input class="btn btn-success" type="submit" value="Add new user">
 
-    <input type="submit" value="Create">
+            </form>
+        </div>
 
-</form>
-
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
