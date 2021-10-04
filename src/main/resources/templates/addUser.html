@@ -5,96 +5,23 @@
 <head>
     <meta charset="UTF-8">
     <title></title>
-    <link href="../css/bootstrap.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: "Lato", sans-serif;
-        }
-
-        .sidenav {
-            height: 100%;
-            width: 160px;
-            position: fixed;
-            z-index: 1;
-            /*top: 10px;*/
-            left: 0;
-            background-color: #ffffff;
-            overflow-x: hidden;
-            padding-top: 20px;
-        }
-
-        .sidenav a {
-            padding: 6px 8px 6px 16px;
-            text-decoration: none;
-            font-size: 25px;
-            color: #0099cc;
-            display: block;
-        }
-
-        .sidenav a:hover {
-            color: #ffffff;
-            background-color: #0099cc;
-        }
-
-        .main {
-            margin-left: 160px; /* Same as the width of the sidenav */
-            font-size: 15px; /* Increased text to enable scrolling */
-            padding: 10px 10px;
-        }
-
-        .main1 {
-            height: 40px;
-            font-size: 25px;
-            color: #ffffff;
-            background-color: #000000;
-        }
-
-        .main1 a {
-            margin-left: 900px;
-            font-size: 15px;
-            color: #9d9d9d;
-            background-color: #000000;
-        }
-
-        .main1 p {
-            display: inline;
-            font-size: 20px;
-            color: #ffffff;
-            background-color: #000000;
-        }
-
-        .main2 {
-            margin-left: 400px; /* Same as the width of the sidenav */
-            margin-right: 400px; /* Same as the width of the sidenav */
-            font-size: 15px; /* Increased text to enable scrolling */
-            text-align: center;
-        }
-
-        @media screen and (max-height: 450px) {
-            .sidenav {
-                padding-top: 15px;
-            }
-
-            .sidenav a {
-                font-size: 20px;
-            }
-        }
-
-        .form-control:valid {
-            background-color: #96d3ec !important;
-        }
-
-    </style>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet">
+    <link th:href="@{/css/mystyle.css}" rel="stylesheet">
 </head>
 <body>
-<div class="main1">
-
-    <p sec:authorize="isAuthenticated()">
-        <span style="font-weight: bold;" sec:authentication="name"></span> with roles: </p>
-    <p th:each="authority : ${#authentication.getAuthorities()}"
-       th:text="${authority.getAuthority().toString()}">
-    </p>
-    <a href="/logout">Logout</a>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-9">
+            <p sec:authorize="isAuthenticated()">
+                <span style="font-weight: bold;" sec:authentication="name"></span> with roles: </p>
+            <p th:each="authority : ${#authentication.getAuthorities()}"
+               th:text="${authority.getAuthority().toString()}">
+            </p>
+        </div>
+        <div class="col-sm-3">
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
 </div>
 <div class="sidenav">
     <a href="/admin">Admin</a>
@@ -113,7 +40,7 @@
 
         <tr class="thead-light"><b>Add new user</b></tr>
         <div class="main2">
-            <form th:method="POST" th:action="@{/admin}" th:object="${user}">
+            <form th:method="POST" th:action="@{/user/update}" th:object="${user}">
 
                 <label for="name"> First name </label>
                 <input class="form-control" required type="text" style="background: #ffd970"
@@ -141,15 +68,12 @@
 
                 <label for="roles">Role:</label>
                 <select class="form-control" id="roles" name="roles" size="2" multiple>
-                    <option value="ADMIN">ADMIN</option>
-                    <option value="USER">USER</option>
+                    <option th:value="ADMIN">ADMIN</option>
+                    <option th:value="USER">USER</option>
                 </select> <br>
-
                 <input class="btn btn-success" type="submit" value="Add new user">
-
             </form>
         </div>
-
         </tbody>
     </table>
 </div>

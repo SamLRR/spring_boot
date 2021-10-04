@@ -71,38 +71,36 @@ public class UserController {
             return "addUser";
         }
 
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        Role roleUser = roleService.findByName("USER");
-        user.setRole(roleUser);
         userService.saveUser(user);
         return "redirect:/admin";
     }
 
     @GetMapping("/user/update/{id}")
-    public String updateUserForm(@PathVariable("id") Long id, Model model) {
+    @ResponseBody
+    public User updateUserForm(@PathVariable("id") Long id) {
         User userFromDB = userService.findById(id);
-        model.addAttribute("user", userFromDB);
-        model.addAttribute("allRoles", roleService.getAllRoles());
-        return "updateUser";
+        return userFromDB;
     }
 
     @PostMapping("/user/update")
-    public String updateUser(@ModelAttribute("user") User user,
+    public String updateUser(User user,
                              @RequestParam Map<String, String> form) {
         List<Role> roles = roleService.getAllRoles();
 
-        for (String key : form.keySet()) {
+        for (String key : form.values()) {
             if (roles.stream().anyMatch(role -> role.getName().equals(key))) {
                 user.getRoles().add(roleService.findByName(key));
             }
         }
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         userService.saveUser(user);
-
         return "redirect:/admin";
     }
 
-    @GetMapping("/user/remove/{id}")
-    public String removeUserById(@PathVariable("id") Long id) {
+    @GetMapping("/user/remove")
+    public String removeUser( @RequestParam Map<String, String> map) {
+        String id1 = map.get("id1");
+        Long id = Long.valueOf(id1);
         User userFromDB = userService.findById(id);
         userService.removeUser(userFromDB);
         return "redirect:/admin";
